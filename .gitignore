@@ -1,0 +1,4 @@
+dist
+src/XPSDK*
+src/build*
+.image
