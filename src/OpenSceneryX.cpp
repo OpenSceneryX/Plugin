@@ -1,34 +1,15 @@
 // Downloaded from https://developer.x-plane.com/code-sample/hello-world-sdk-3/
 
-#include "XPLMDisplay.h"
-#include "XPLMGraphics.h"
-#include <string.h>
-#if IBM
-	#include <windows.h>
-#endif
-
-#ifndef XPLM300
-	#error This is made to be compiled against the XPLM300 SDK
-#endif
-
-// An opaque handle to the window we will create
-static XPLMWindowID	g_window;
-
-// Callbacks we will register when we create our window
-void				draw_hello_world(XPLMWindowID in_window_id, void * in_refcon);
-int					dummy_mouse_handler(XPLMWindowID in_window_id, int x, int y, int is_down, void * in_refcon) { return 0; }
-XPLMCursorStatus	dummy_cursor_status_handler(XPLMWindowID in_window_id, int x, int y, void * in_refcon) { return xplm_CursorDefault; }
-int					dummy_wheel_handler(XPLMWindowID in_window_id, int x, int y, int wheel, int clicks, void * in_refcon) { return 0; }
-void				dummy_key_handler(XPLMWindowID in_window_id, char key, XPLMKeyFlags flags, char virtual_key, void * in_refcon, int losing_focus) { }
+#include "OpenSceneryX.h"
 
 PLUGIN_API int XPluginStart(
 							char *		outName,
 							char *		outSig,
 							char *		outDesc)
 {
-	strcpy(outName, "HelloWorld3Plugin");
-	strcpy(outSig, "xpsdk.examples.helloworld3plugin");
-	strcpy(outDesc, "A Hello World plug-in for the XPLM300 SDK.");
+	strcpy(outName, "OpenSceneryX");
+	strcpy(outSig, "openscenery.plugin");
+	strcpy(outDesc, "OpenSceneryX Support Plugin.");
 	
 	XPLMCreateWindow_t params;
 	params.structSize = sizeof(params);
@@ -98,6 +79,6 @@ void	draw_hello_world(XPLMWindowID in_window_id, void * in_refcon)
 	
 	float col_white[] = {1.0, 1.0, 1.0}; // red, green, blue
 	
-	XPLMDrawString(col_white, l + 10, t - 20, "Hello world!", NULL, xplmFont_Proportional);
+	XPLMDrawString(col_white, l + 10, t - 20, "Welcome to the OpenSceneryX plugin!", NULL, xplmFont_Proportional);
 }
 
