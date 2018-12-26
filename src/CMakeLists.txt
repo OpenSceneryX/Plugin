@@ -19,14 +19,16 @@ include_directories("${CMAKE_SOURCE_DIR}/XPSDK301/CHeaders/Widgets")
 include_directories("${CMAKE_SOURCE_DIR}/XPSDK301/CHeaders/Wrappers")
 include_directories("${CMAKE_SOURCE_DIR}/XPSDK301/CHeaders/XPLM")
 include_directories("${CMAKE_SOURCE_DIR}/include64")
-include_directories("${CMAKE_SOURCE_DIR}/hidapi")
 include_directories("${CMAKE_SOURCE_DIR}/.")
-include_directories("${CMAKE_SOURCE_DIR}/FloatingWindows")
-include_directories("${CMAKE_SOURCE_DIR}/imgui")
+
+if (WIN32)
+    include_directories("${CMAKE_SOURCE_DIR}/GLUT_for_Windows")
+endif (WIN32)
 
 # Specify library search locations.
 if (WIN32)
     list(APPEND CMAKE_LIBRARY_PATH "${CMAKE_SOURCE_DIR}/include64")
+    list(APPEND CMAKE_LIBRARY_PATH "${CMAKE_SOURCE_DIR}/GLUT_for_Windows")
     list(APPEND CMAKE_LIBRARY_PATH "${CMAKE_SOURCE_DIR}/XPSDK301/Libraries/Win")
 elseif (APPLE)
     list(APPEND CMAKE_FRAMEWORK_PATH "${CMAKE_SOURCE_DIR}/XPSDK301/Libraries/Mac")
@@ -59,15 +61,6 @@ add_compile_options(-O3 -fPIC)
 # X-Plane plugin
 # FIXME: Split this into individual targets.
 list(APPEND OPENSCENERYX_SRCS OpenSceneryX.cpp)
-#list(APPEND OPENSCENERYX_SRCS FloatingWindows/FLWIntegration.cpp FloatingWindows/ImGUIIntegration.cpp FloatingWindows/FloatingWindow.cpp)
-#list(APPEND OPENSCENERYX_SRCS imgui/imgui.cpp imgui/imgui_demo.cpp imgui/imgui_draw.cpp imgui/imgui_lua_bindings.cpp)
-#if (WIN32)
-#    list(APPEND OPENSCENERYX_SRCS hidapi/windows/hid.c)
-#elseif (APPLE)
-#    list(APPEND OPENSCENERYX_SRCS hidapi/mac/hid.c)
-#elseif (UNIX)
-#    list(APPEND OPENSCENERYX_SRCS hidapi/linux/hid.c)
-#endif ()
 
 add_library(OpenSceneryX SHARED ${OPENSCENERYX_SRCS})
 
@@ -80,17 +73,16 @@ if (APPLE)
     target_link_libraries(OpenSceneryX -mmacosx-version-min=10.10)
 endif ()
 
+# Link OpenGL and OpenAL related libraries.
+find_package(OpenGL REQUIRED)  # apt install freeglut3-dev
+find_library(GLUT_LIBRARY NAMES glut GLUT glut64)  # apt install freeglut3-dev
+target_link_libraries(OpenSceneryX ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
+
 # Link X-Plane plugin system libraries. They are only provided for OS X and Windows.
 if (WIN32 OR APPLE)
     find_library(XPLM_LIBRARY NAMES XPLM XPLM_64.lib)
     find_library(XPWIDGETS_LIBRARY NAMES XPWidgets XPWidgets_64.lib)
     target_link_libraries(OpenSceneryX ${XPLM_LIBRARY} ${XPWIDGETS_LIBRARY})
-endif ()
-
-# Link OS-specific libraries HidApi depends on. Only supported for Windows and Linux.
-if ((WIN32 OR UNIX) AND NOT APPLE)
-    find_library(HIDAPIDEPS_LIBRARY NAMES setupapi udev)
-    target_link_libraries(OpenSceneryX ${HIDAPIDEPS_LIBRARY})
 endif ()
 
 # Link library for dynamic loading of shared objects on UNIX systems.

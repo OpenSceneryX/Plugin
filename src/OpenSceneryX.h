@@ -1,11 +1,26 @@
 #include "XPLMDisplay.h"
 #include "XPLMGraphics.h"
 #include <string.h>
+#include <stdio.h>
 
 //#include "curl/curl.h"
 
 #if IBM
 	#include <windows.h>
+#endif
+
+#if IBM
+	#include <GL/gl.h>
+	#include <GL/glut.h>
+#elif LIN
+	#include <GL/gl.h>
+	#include <GL/glu.h>
+	#include <GL/glut.h>
+#else
+	#include <OpenGL/gl.h>
+	#include <OpenGL/glu.h>
+	#include <GLUT/glut.h>
+	#include <Carbon/Carbon.h>
 #endif
 
 #ifndef XPLM300
