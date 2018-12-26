@@ -14,7 +14,7 @@ PLUGIN_API int XPluginStart(
 	XPLMCreateWindow_t params;
 	params.structSize = sizeof(params);
 	params.visible = 1;
-	params.drawWindowFunc = draw_hello_world;
+	params.drawWindowFunc = draw_opensceneryx_window;
 	// Note on "dummy" handlers:
 	// Even if we don't want to handle these events, we have to register a "do-nothing" callback for them
 	params.handleMouseClickFunc = dummy_mouse_handler;
@@ -33,10 +33,10 @@ PLUGIN_API int XPluginStart(
 	// We'll need to query for the global desktop bounds!
 	int left, bottom, right, top;
 	XPLMGetScreenBoundsGlobal(&left, &top, &right, &bottom);
-	params.left = left + 50;
-	params.bottom = bottom + 150;
-	params.right = params.left + 200;
-	params.top = params.bottom + 200;
+	params.left = left + 20;
+	params.right = params.left + 300;
+	params.top = top - 20;
+	params.bottom = params.top - 50;
 	
 	g_window = XPLMCreateWindowEx(&params);
 	
@@ -60,7 +60,7 @@ PLUGIN_API void XPluginDisable(void) { }
 PLUGIN_API int  XPluginEnable(void)  { return 1; }
 PLUGIN_API void XPluginReceiveMessage(XPLMPluginID inFrom, int inMsg, void * inParam) { }
 
-void	draw_hello_world(XPLMWindowID in_window_id, void * in_refcon)
+void	draw_opensceneryx_window(XPLMWindowID in_window_id, void * in_refcon)
 {
 	// Mandatory: We *must* set the OpenGL state before drawing
 	// (we can't make any assumptions about it)
