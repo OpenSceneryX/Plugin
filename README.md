@@ -21,5 +21,5 @@ eval $(docker-machine env default)
 ## Building
 
 ```bash
-
+./build.sh
 ```
