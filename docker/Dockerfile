@@ -12,9 +12,9 @@ RUN apt-get install -y --no-install-recommends build-essential ninja-build sudo 
 RUN apt-get install -y --no-install-recommends mingw-w64 g++-mingw-w64 && apt-get clean
 
 # Install OS X cross-compiling toolchain (clang).
-
 RUN apt-get install -y --no-install-recommends clang curl && apt-get clean
-#Build arguments
+
+# Build arguments
 ARG osxcross_repo="tpoechtrager/osxcross"
 ARG osxcross_revision="f4ba4facae996b3b14d89eb62c0384564f7368b5"
 ARG darwin_sdk_version="10.11"

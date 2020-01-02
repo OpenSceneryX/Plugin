@@ -4,7 +4,10 @@ set -e
 function build() {
   local src_dir="$1"
   local platform="$2"
+
+  echo
   echo "----------------- Building for $platform -----------------"
+  echo
 
   local build_dir="$src_dir/build-$platform"
 
