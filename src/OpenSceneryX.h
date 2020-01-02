@@ -3,7 +3,8 @@
 #include <string.h>
 #include <stdio.h>
 
-//#include "curl/curl.h"
+#define CURL_STATICLIB
+#include "curl/curl.h"
 
 #if IBM
 	#include <windows.h>

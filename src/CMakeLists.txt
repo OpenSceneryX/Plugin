@@ -21,6 +21,7 @@ include_directories("${CMAKE_SOURCE_DIR}/lib/XPSDK301/CHeaders/XPLM")
 include_directories("${CMAKE_SOURCE_DIR}/.")
 
 if (WIN32)
+    include_directories("${CMAKE_SOURCE_DIR}/lib/CURL/libcurl.framework/Headers") # This is the curl Mac framework but Windows needs a location to find the header
     include_directories("${CMAKE_SOURCE_DIR}/lib/GLUT_for_Windows")
 endif (WIN32)
 
@@ -29,10 +30,11 @@ if (WIN32)
     list(APPEND CMAKE_LIBRARY_PATH "${CMAKE_SOURCE_DIR}/lib/include64")
     list(APPEND CMAKE_LIBRARY_PATH "${CMAKE_SOURCE_DIR}/lib/GLUT_for_Windows")
     list(APPEND CMAKE_LIBRARY_PATH "${CMAKE_SOURCE_DIR}/lib/XPSDK301/Libraries/Win")
+    list(APPEND CMAKE_LIBRARY_PATH "${CMAKE_SOURCE_DIR}/lib/CURL")
 elseif (APPLE)
     list(APPEND CMAKE_FRAMEWORK_PATH "${CMAKE_SOURCE_DIR}/lib/XPSDK301/Libraries/Mac")
+    list(APPEND CMAKE_FRAMEWORK_PATH "${CMAKE_SOURCE_DIR}/lib/CURL")
 elseif (UNIX)
-
 endif ()
 
 
@@ -75,6 +77,10 @@ endif ()
 find_package(OpenGL REQUIRED)  # apt install freeglut3-dev
 find_library(GLUT_LIBRARY NAMES glut GLUT glut64)  # apt install freeglut3-dev
 target_link_libraries(OpenSceneryX ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
+
+# Link CURL
+find_library(CURL_LIBRARY NAMES curl)  # apt install curl
+target_link_libraries(OpenSceneryX ${CURL_LIBRARY})
 
 # Link X-Plane plugin system libraries. They are only provided for OS X and Windows.
 if (WIN32 OR APPLE)
