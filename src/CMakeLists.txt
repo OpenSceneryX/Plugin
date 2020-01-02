@@ -15,24 +15,22 @@ endif ()
 set(CMAKE_CXX_STANDARD 14)
 
 # Set include directories used by our code and dependencies.
-include_directories("${CMAKE_SOURCE_DIR}/XPSDK301/CHeaders/Widgets")
-include_directories("${CMAKE_SOURCE_DIR}/XPSDK301/CHeaders/Wrappers")
-include_directories("${CMAKE_SOURCE_DIR}/XPSDK301/CHeaders/XPLM")
-include_directories("${CMAKE_SOURCE_DIR}/include64")
+include_directories("${CMAKE_SOURCE_DIR}/lib/XPSDK301/CHeaders/Widgets")
+include_directories("${CMAKE_SOURCE_DIR}/lib/XPSDK301/CHeaders/Wrappers")
+include_directories("${CMAKE_SOURCE_DIR}/lib/XPSDK301/CHeaders/XPLM")
 include_directories("${CMAKE_SOURCE_DIR}/.")
 
 if (WIN32)
-    include_directories("${CMAKE_SOURCE_DIR}/GLUT_for_Windows")
+    include_directories("${CMAKE_SOURCE_DIR}/lib/GLUT_for_Windows")
 endif (WIN32)
 
 # Specify library search locations.
 if (WIN32)
-    list(APPEND CMAKE_LIBRARY_PATH "${CMAKE_SOURCE_DIR}/include64")
-    list(APPEND CMAKE_LIBRARY_PATH "${CMAKE_SOURCE_DIR}/GLUT_for_Windows")
-    list(APPEND CMAKE_LIBRARY_PATH "${CMAKE_SOURCE_DIR}/XPSDK301/Libraries/Win")
+    list(APPEND CMAKE_LIBRARY_PATH "${CMAKE_SOURCE_DIR}/lib/include64")
+    list(APPEND CMAKE_LIBRARY_PATH "${CMAKE_SOURCE_DIR}/lib/GLUT_for_Windows")
+    list(APPEND CMAKE_LIBRARY_PATH "${CMAKE_SOURCE_DIR}/lib/XPSDK301/Libraries/Win")
 elseif (APPLE)
-    list(APPEND CMAKE_FRAMEWORK_PATH "${CMAKE_SOURCE_DIR}/XPSDK301/Libraries/Mac")
-    list(APPEND CMAKE_LIBRARY_PATH "${CMAKE_SOURCE_DIR}/mac_libs")
+    list(APPEND CMAKE_FRAMEWORK_PATH "${CMAKE_SOURCE_DIR}/lib/XPSDK301/Libraries/Mac")
 elseif (UNIX)
 
 endif ()
