@@ -33,6 +33,7 @@ static				XPLMWindowID	g_window;
 
 // Our functions
 void				draw_opensceneryx_window(XPLMWindowID in_window_id, void * in_refcon);
+void				fetch_version();
 
 // Callbacks we will register when we create our window
 int					dummy_mouse_handler(XPLMWindowID in_window_id, int x, int y, int is_down, void * in_refcon) { return 0; }
