@@ -10,7 +10,7 @@ PLUGIN_API int XPluginStart(
 	strcpy(outName, "OpenSceneryX");
 	strcpy(outSig, "openscenery.plugin");
 	strcpy(outDesc, "OpenSceneryX Support Plugin.");
-	
+
 	XPLMCreateWindow_t params;
 	params.structSize = sizeof(params);
 	params.visible = 1;
@@ -25,9 +25,8 @@ PLUGIN_API int XPluginStart(
 	params.refcon = NULL;
 	params.layer = xplm_WindowLayerFloatingWindows;
 	// Opt-in to styling our window like an X-Plane 11 native window
-	// If you're on XPLM300, not XPLM301, swap this enum for the literal value 1.
 	params.decorateAsFloatingWindow = xplm_WindowDecorationRoundRectangle;
-	
+
 	// Set the window's initial bounds
 	// Note that we're not guaranteed that the main monitor's lower left is at (0, 0)...
 	// We'll need to query for the global desktop bounds!
@@ -37,15 +36,15 @@ PLUGIN_API int XPluginStart(
 	params.right = params.left + 300;
 	params.top = top - 20;
 	params.bottom = params.top - 50;
-	
+
 	g_window = XPLMCreateWindowEx(&params);
-	
+
 	// Position the window as a "free" floating window, which the user can drag around
 	XPLMSetWindowPositioningMode(g_window, xplm_WindowPositionFree, -1);
 	// Limit resizing our window: maintain a minimum width/height of 100 boxels and a max width/height of 300 boxels
 	XPLMSetWindowResizingLimits(g_window, 200, 200, 300, 300);
 	XPLMSetWindowTitle(g_window, "Sample Window");
-	
+
 	return g_window != NULL;
 }
 
@@ -73,12 +72,12 @@ void	draw_opensceneryx_window(XPLMWindowID in_window_id, void * in_refcon)
 						 1 /* do depth testing */,
 						 0 /* no depth writing */
 						 );
-	
+
 	int l, t, r, b;
 	XPLMGetWindowGeometry(in_window_id, &l, &t, &r, &b);
-	
+
 	float col_white[] = {1.0, 1.0, 1.0}; // red, green, blue
-	
+
 	XPLMDrawString(col_white, l + 10, t - 20, "Welcome to the OpenSceneryX plugin!", NULL, xplmFont_Proportional);
 }
 
