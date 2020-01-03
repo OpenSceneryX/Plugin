@@ -1,3 +1,8 @@
+#if IBM
+	#include <winsock2.h>
+	#include <windows.h>
+#endif
+
 #include "XPLMDisplay.h"
 #include "XPLMGraphics.h"
 #include <string.h>
@@ -5,14 +10,6 @@
 
 #include <iostream>
 #include <string>
-
-#define CURL_STATICLIB
-#include <curl/curl.h>
-
-#if IBM
-	#include <winsock2.h>
-	#include <windows.h>
-#endif
 
 #if IBM
 	#include <GL/gl.h>
@@ -27,6 +24,9 @@
 	#include <GLUT/glut.h>
 	#include <Carbon/Carbon.h>
 #endif
+
+#define CURL_STATICLIB
+#include <curl/curl.h>
 
 #ifndef XPLM301
 	#error This is made to be compiled against the XPLM301 SDK
