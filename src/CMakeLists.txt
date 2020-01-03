@@ -18,10 +18,10 @@ set(CMAKE_CXX_STANDARD 14)
 include_directories("${CMAKE_SOURCE_DIR}/lib/XPSDK301/CHeaders/Widgets")
 include_directories("${CMAKE_SOURCE_DIR}/lib/XPSDK301/CHeaders/Wrappers")
 include_directories("${CMAKE_SOURCE_DIR}/lib/XPSDK301/CHeaders/XPLM")
+include_directories("${CMAKE_SOURCE_DIR}/lib/CURL/include")
 include_directories("${CMAKE_SOURCE_DIR}/.")
 
 if (WIN32)
-    include_directories("${CMAKE_SOURCE_DIR}/lib/CURL/libcurl.framework/Headers") # This is the curl Mac framework but Windows needs a location to find the header
     include_directories("${CMAKE_SOURCE_DIR}/lib/GLUT_for_Windows")
 endif (WIN32)
 
