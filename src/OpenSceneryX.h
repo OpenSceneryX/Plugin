@@ -3,10 +3,14 @@
 #include <string.h>
 #include <stdio.h>
 
+#include <iostream>
+#include <string>
+
 #define CURL_STATICLIB
 #include <curl/curl.h>
 
 #if IBM
+	#include <winsock2.h>
 	#include <windows.h>
 #endif
 
@@ -28,12 +32,20 @@
 	#error This is made to be compiled against the XPLM301 SDK
 #endif
 
+// Data structure for receiving data from curl
+struct OpenSceneryXDataStruct {
+	std::string serverVersion;
+};
+
 // An opaque handle to the window we will create
-static				XPLMWindowID	g_window;
+static				XPLMWindowID g_window;
+// Our data storage
+static				OpenSceneryXDataStruct g_osxinfo;
 
 // Our functions
 void				draw_opensceneryx_window(XPLMWindowID in_window_id, void * in_refcon);
-void				fetch_version();
+void				fetch_opensceneryx_version();
+size_t				curl_write_receive_version_data(void *buffer, size_t size, size_t nmemb, void *userp);
 
 // Callbacks we will register when we create our window
 int					dummy_mouse_handler(XPLMWindowID in_window_id, int x, int y, int is_down, void * in_refcon) { return 0; }

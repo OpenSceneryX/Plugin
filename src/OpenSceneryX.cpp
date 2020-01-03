@@ -45,35 +45,10 @@ PLUGIN_API int XPluginStart(
 	XPLMSetWindowResizingLimits(g_window, 200, 200, 300, 300);
 	XPLMSetWindowTitle(g_window, "Sample Window");
 
-	fetch_version();
+	fetch_opensceneryx_version();
 
 	return g_window != NULL;
 }
-
-void fetch_version()
-{
-	CURL *curl;
-	CURLcode res;
-
-	curl_global_init(CURL_GLOBAL_DEFAULT);
-
-	curl = curl_easy_init();
-	if(curl) {
-		curl_easy_setopt(curl, CURLOPT_URL, "https://downloads.opensceneryx.com/library/version.txt");
-
-		/* Perform the request, res will get the return code */
-		res = curl_easy_perform(curl);
-		/* Check for errors */
-		if(res != CURLE_OK)
-		fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
-
-		/* always cleanup */
-		curl_easy_cleanup(curl);
-	}
-
-	curl_global_cleanup();
-}
-
 
 PLUGIN_API void	XPluginStop(void)
 {
@@ -105,6 +80,35 @@ void	draw_opensceneryx_window(XPLMWindowID in_window_id, void * in_refcon)
 
 	float col_white[] = {1.0, 1.0, 1.0}; // red, green, blue
 
-	XPLMDrawString(col_white, l + 10, t - 20, "Welcome to the OpenSceneryX plugin!", NULL, xplmFont_Proportional);
+	XPLMDrawString(col_white, l + 10, t - 20, const_cast<char*>(g_osxinfo.serverVersion.c_str()), NULL, xplmFont_Proportional);
 }
 
+void fetch_opensceneryx_version()
+{
+	CURL *curl;
+	CURLcode res;
+
+	curl_global_init(CURL_GLOBAL_DEFAULT);
+	curl = curl_easy_init();
+
+	if(curl) {
+		curl_easy_setopt(curl, CURLOPT_URL, "https://downloads.opensceneryx.com/library/version.txt");
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_write_receive_version_data);
+
+		/* Perform the request, res will get the return code */
+		res = curl_easy_perform(curl);
+		/* Check for errors */
+		if(res != CURLE_OK) fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+
+		/* always cleanup */
+		curl_easy_cleanup(curl);
+	}
+
+	curl_global_cleanup();
+}
+
+size_t curl_write_receive_version_data(void *contents, size_t size, size_t nmemb, void *userp)
+{
+	g_osxinfo.serverVersion.append((char*)contents, size * nmemb);
+    return size * nmemb;
+}
