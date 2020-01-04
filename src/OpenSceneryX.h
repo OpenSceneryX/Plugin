@@ -5,9 +5,13 @@
 
 #include "XPLMDisplay.h"
 #include "XPLMGraphics.h"
+#include "XPLMPlugin.h"
+#include "XPLMUtilities.h"
+
 #include <string.h>
 #include <stdio.h>
 
+#include <fstream>
 #include <iostream>
 #include <string>
 
@@ -35,6 +39,7 @@
 // Data structure for receiving data from curl
 struct OpenSceneryXDataStruct {
 	std::string serverVersion;
+	std::string localVersion;
 };
 
 // An opaque handle to the window we will create
@@ -44,7 +49,8 @@ static				OpenSceneryXDataStruct g_osxinfo;
 
 // Our functions
 void				draw_opensceneryx_window(XPLMWindowID in_window_id, void * in_refcon);
-void				fetch_opensceneryx_version();
+void				fetch_opensceneryx_server_version();
+void				fetch_opensceneryx_local_version();
 size_t				curl_write_receive_version_data(void *buffer, size_t size, size_t nmemb, void *userp);
 
 // Callbacks we will register when we create our window

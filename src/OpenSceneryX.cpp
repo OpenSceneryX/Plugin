@@ -1,7 +1,7 @@
-// Downloaded from https://developer.x-plane.com/code-sample/hello-world-sdk-3/
 
 #include "OpenSceneryX.h"
 
+// Plugin Start API call
 PLUGIN_API int XPluginStart(
 							char *		outName,
 							char *		outSig,
@@ -10,6 +10,8 @@ PLUGIN_API int XPluginStart(
 	strcpy(outName, "OpenSceneryX");
 	strcpy(outSig, "openscenery.plugin");
 	strcpy(outDesc, "OpenSceneryX Support Plugin.");
+
+	XPLMEnableFeature("XPLM_USE_NATIVE_PATHS", 1);
 
 	XPLMCreateWindow_t params;
 	params.structSize = sizeof(params);
@@ -45,11 +47,13 @@ PLUGIN_API int XPluginStart(
 	XPLMSetWindowResizingLimits(g_window, 200, 200, 300, 300);
 	XPLMSetWindowTitle(g_window, "Sample Window");
 
-	fetch_opensceneryx_version();
+	fetch_opensceneryx_server_version();
+	fetch_opensceneryx_local_version();
 
 	return g_window != NULL;
 }
 
+// Plugin stop API call
 PLUGIN_API void	XPluginStop(void)
 {
 	// Since we created the window, we'll be good citizens and clean it up
@@ -57,10 +61,14 @@ PLUGIN_API void	XPluginStop(void)
 	g_window = NULL;
 }
 
+
+// Unimplemented API calls
 PLUGIN_API void XPluginDisable(void) { }
 PLUGIN_API int  XPluginEnable(void)  { return 1; }
 PLUGIN_API void XPluginReceiveMessage(XPLMPluginID inFrom, int inMsg, void * inParam) { }
 
+
+// Draw the contents of our window
 void	draw_opensceneryx_window(XPLMWindowID in_window_id, void * in_refcon)
 {
 	// Mandatory: We *must* set the OpenGL state before drawing
@@ -80,10 +88,13 @@ void	draw_opensceneryx_window(XPLMWindowID in_window_id, void * in_refcon)
 
 	float col_white[] = {1.0, 1.0, 1.0}; // red, green, blue
 
-	XPLMDrawString(col_white, l + 10, t - 20, const_cast<char*>(g_osxinfo.serverVersion.c_str()), NULL, xplmFont_Proportional);
+	XPLMDrawString(col_white, l + 10, t - 20, const_cast<char*>(("Remote: " + g_osxinfo.serverVersion).c_str()), NULL, xplmFont_Proportional);
+	XPLMDrawString(col_white, l + 10, t - 40, const_cast<char*>(("Local:  " + g_osxinfo.localVersion).c_str()), NULL, xplmFont_Proportional);
 }
 
-void fetch_opensceneryx_version()
+
+// Use CURL to fetch the current OpenSceneryX server version information
+void fetch_opensceneryx_server_version()
 {
 	CURL *curl;
 	CURLcode res;
@@ -107,8 +118,29 @@ void fetch_opensceneryx_version()
 	curl_global_cleanup();
 }
 
+
+// CURL callback to read the version information from a server install of OpenSceneryX, store it in g_osxinfo.serverVersion
 size_t curl_write_receive_version_data(void *contents, size_t size, size_t nmemb, void *userp)
 {
 	g_osxinfo.serverVersion.append((char*)contents, size * nmemb);
     return size * nmemb;
+}
+
+
+// Read the version information from a local install of OpenSceneryX, store it in g_osxinfo.localVersion
+void fetch_opensceneryx_local_version()
+{
+	char cSystemPath[1024];
+	XPLMGetSystemPath(cSystemPath);
+	std::string systemPath(cSystemPath);
+
+	std::ifstream inFile;
+	inFile.open(systemPath + "Custom Scenery/OpenSceneryX/version.txt");
+
+	if (inFile && inFile.is_open()) {
+		getline(inFile, g_osxinfo.localVersion);
+		inFile.close();
+	} else {
+		g_osxinfo.localVersion = "OpenSceneryX not installed";
+	}
 }
